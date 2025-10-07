@@ -1,6 +1,5 @@
 // app/archive/page.tsx
 import Header from "../../app/components/Header";
-import Image from "next/image";
 
 type APODData = {
   date: string;
@@ -14,7 +13,6 @@ async function getLatestAPODs(count: number = 7): Promise<APODData[]> {
   const API_KEY = process.env.NASA_API_KEY;
   if (!API_KEY) throw new Error("NASA APIキーが設定されていません");
 
-  // ISR対応：リクエスト時にAPI取得、1時間キャッシュ
   const res = await fetch(
     `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&count=${count}`,
     { next: { revalidate: 3600 } }
@@ -39,13 +37,11 @@ export default async function Archive() {
         {dataList.map((data: APODData, index: number) => (
           <div key={`${data.date}-${index}`} className="border rounded-lg p-2">
             {data.media_type === "image" ? (
-              <div className="relative w-full h-60 sm:h-72 md:h-80 mb-2">
-                <Image
+              <div className="mb-2 w-full h-60 sm:h-72 md:h-80 overflow-hidden rounded-md">
+                <img
                   src={data.url}
                   alt={data.title}
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-md"
+                  className="w-full h-full object-contain"
                 />
               </div>
             ) : (

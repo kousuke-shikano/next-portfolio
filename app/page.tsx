@@ -1,6 +1,5 @@
 // app/page.tsx
 import Header from "../app/components/Header";
-import Image from "next/image";
 
 async function getAPOD() {
   const API_KEY = process.env.NASA_API_KEY;
@@ -30,18 +29,14 @@ export default async function Home() {
         <p className="text-gray-600 mb-4">{data.date}</p>
 
         {data.media_type === "image" ? (
-          // 画像表示
-          <div className="mb-4 w-full relative h-[500px] sm:h-[600px] md:h-[700px]">
-            <Image
+          <div className="mb-4 w-full max-w-full h-[500px] sm:h-[600px] md:h-[700px] overflow-hidden rounded-lg">
+            <img
               src={data.url}
               alt={data.title}
-              fill
-              style={{ objectFit: "contain" }}
-              className="rounded-lg"
+              className="w-full h-full object-contain"
             />
           </div>
         ) : (
-          // 動画表示
           <iframe
             src={data.url}
             allow="fullscreen"
