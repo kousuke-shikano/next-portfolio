@@ -2,7 +2,15 @@
 import Header from "../../app/components/Header";
 import Image from "next/image";
 
-async function getLatestAPODs(count: number = 7) {
+type APODData = {
+  date: string;
+  title: string;
+  url: string;
+  media_type: "image" | "video";
+  explanation: string;
+};
+
+async function getLatestAPODs(count: number = 7): Promise<APODData[]> {
   const API_KEY = process.env.NASA_API_KEY;
   if (!API_KEY) throw new Error("NASA APIキーが設定されていません");
 
@@ -16,8 +24,8 @@ async function getLatestAPODs(count: number = 7) {
     throw new Error(`NASA APIエラー ${res.status}: ${text}`);
   }
 
-  const dataList = await res.json();
-  return dataList.filter((data: any) => data && data.url);
+  const dataList: APODData[] = await res.json();
+  return dataList.filter((data) => data && data.url);
 }
 
 export default async function Archive() {
@@ -27,10 +35,9 @@ export default async function Archive() {
     <div>
       <Header />
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {dataList.map((data: any, index: number) => (
+        {dataList.map((data: APODData, index: number) => (
           <div key={`${data.date}-${index}`} className="border rounded-lg p-2">
             {data.media_type === "image" ? (
-              // トップページと同じ方法で高さを確保
               <div className="relative w-full h-60 sm:h-72 md:h-80 mb-2">
                 <Image
                   src={data.url}
