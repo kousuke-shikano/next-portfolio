@@ -14,6 +14,7 @@ async function getLatestAPODs(count: number = 7): Promise<APODData[]> {
   const API_KEY = process.env.NASA_API_KEY;
   if (!API_KEY) throw new Error("NASA APIキーが設定されていません");
 
+  // ISR対応：リクエスト時にAPI取得、1時間キャッシュ
   const res = await fetch(
     `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&count=${count}`,
     { next: { revalidate: 3600 } }
