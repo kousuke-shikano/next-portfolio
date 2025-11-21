@@ -2,10 +2,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 静的エクスポート対応
-  output: 'export',
-
-  // 外部画像ドメイン許可
+  // output: 'export' を削除
   images: {
     domains: ['apod.nasa.gov'],
   },
