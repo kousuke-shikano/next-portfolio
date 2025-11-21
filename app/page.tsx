@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
+        // 最新1枚だけ取得。ブラウザキャッシュ回避
         const res = await fetch("/api/apod?count=1", { cache: "no-store" });
         const json: APODData = await res.json();
         setData(json);
@@ -39,7 +41,7 @@ export default function Home() {
         {data.media_type === "image" ? (
           <div className="mb-4 w-full max-w-full h-[500px] sm:h-[600px] md:h-[700px] overflow-hidden rounded-lg">
             <img
-              src={`${data.url}?t=${Date.now()}`}
+              src={`${data.url}?t=${Date.now()}`} // タイムスタンプでブラウザキャッシュ回避
               alt={data.title}
               className="w-full h-full object-contain"
             />
