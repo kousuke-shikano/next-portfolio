@@ -7,7 +7,7 @@ async function getAPOD() {
 
   const res = await fetch(
     `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`,
-    { next: { revalidate: 3600 } }
+    { cache: "no-store" } //最新の一枚だけ出るように
   );
 
   if (!res.ok) {

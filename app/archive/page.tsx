@@ -15,7 +15,7 @@ async function getLatestAPODs(count: number = 7): Promise<APODData[]> {
 
   const res = await fetch(
     `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&count=${count}`,
-    { next: { revalidate: 3600 } }
+    { cache: "no-store" } //取得したランダムの数枚でるように
   );
 
   if (!res.ok) {
