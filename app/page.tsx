@@ -1,25 +1,33 @@
-// app/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "../app/components/Header";
 
-async function getAPOD() {
-  const API_KEY = process.env.NASA_API_KEY;
-  if (!API_KEY) throw new Error("NASA APIキーが設定されていません");
+type APODData = {
+  date: string;
+  title: string;
+  url: string;
+  media_type: "image" | "video";
+  explanation: string;
+};
 
-  const res = await fetch(
-    `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`,
-    { cache: "no-store" } //最新の一枚だけ出るように
-  );
+export default function Home() {
+  const [data, setData] = useState<APODData | null>(null);
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`NASA APIエラー ${res.status}: ${text}`);
-  }
+  useEffect(() => {
+    const fetchLatest = async () => {
+      try {
+        const res = await fetch("/api/apod?count=1", { cache: "no-store" });
+        const json: APODData = await res.json();
+        setData(json);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchLatest();
+  }, []);
 
-  return res.json();
-}
-
-export default async function Home() {
-  const data = await getAPOD();
+  if (!data) return <div>読み込み中…</div>;
 
   return (
     <div>
@@ -31,7 +39,7 @@ export default async function Home() {
         {data.media_type === "image" ? (
           <div className="mb-4 w-full max-w-full h-[500px] sm:h-[600px] md:h-[700px] overflow-hidden rounded-lg">
             <img
-              src={data.url}
+              src={`${data.url}?t=${Date.now()}`}
               alt={data.title}
               className="w-full h-full object-contain"
             />
