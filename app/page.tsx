@@ -1,5 +1,6 @@
 // app/page.tsx
 import Header from "../app/components/Header";
+import ApodDescription from "./components/ApodDescription";
 
 type APODData = {
   date: string;
@@ -40,7 +41,7 @@ export default async function Home() {
           <iframe src={data.url} allow="fullscreen" className="mb-4 rounded-lg w-full aspect-video" />
         )}
 
-        <p>{data.explanation}</p>
+        <ApodDescription text={data.explanation} />
       </main>
     </div>
   );
